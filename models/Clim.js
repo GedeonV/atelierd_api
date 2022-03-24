@@ -18,7 +18,7 @@ const ClimSchema = new Schema({
     date1: {
         type: String,
     },
-    ref: {
+    _ref: {
         type: String,
         required: true,
     },

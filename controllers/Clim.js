@@ -8,25 +8,22 @@ exports.clim_get_all = (req, res) => {
   Clim.find({})
     .then((clim) => {
       if (clim) {
-        // res.status(200).json({
-        //   count: song.length,
-        //   songs: song.map((doc) => {
-        //     return {
-        //       _id: doc._id,
-        //       title: doc.title,
-        //       artist: doc.artist,
-        //       album: doc.album,
-        //       date: doc.date,
-        //       style: doc.style,
-        //       time: doc.time,
-        //       path: doc.path,
-        //       request: {
-        //         type: "GET",
-        //         url: "https://sfm-project.herokuapp.com/songs/song/" + doc._id,
-        //       },
-        //     };
-        //   }),
-        // });
+        res.status(200).json({
+          count: clim.length,
+          refs: clim.map((doc) => {
+            return {
+              _id: doc._id,
+              marque: doc.marque,
+              modele: doc.modele,
+              date1: doc.date1,
+              ref: doc.ref,
+              // request: {
+              //   type: "GET",
+              //   url: "https://sfm-project.herokuapp.com/songs/song/" + doc._id,
+              // },
+            };
+          }),
+        });
       } else {
         res.status(204).json({ error: "Aucune donnée" });
       }

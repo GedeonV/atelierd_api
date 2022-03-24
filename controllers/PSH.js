@@ -34,6 +34,45 @@ exports.psh_get_all = (req, res) => {
     });
 };
 
+exports.psh_create = (req, res) => {
+  const today = new Date();
+  const pshData = {
+    modele: req.body.psh,
+    marque: req.body.marque,
+    moteur: req.body.moteur,
+    date1: req.body.date1,
+    date2: req.body.date2,
+    ref: req.body.ref,
+    created: today,
+  };
+  PSH
+  .create(pshData)
+  .then((psh) => {
+    res.status(201).json({
+      message: "Ref PSH ajouté avec succès",
+      createdEvent: {
+        modele: psh.modele,
+        marque: psh.marque,
+        moteur: psh.moteur,
+        date1: psh.date1,
+        date2: psh.date2,
+        ref: psh.ref,
+        _id: psh._id,
+        // request: {
+        //   type: "GET",
+        //   url:
+        //     "https://sfm-project.herokuapp.com/parties/event/" +
+        //     party._id,
+        // },
+      },
+    });
+  })
+  .catch((err) => {
+    res.status(500).json({ error: err });
+    console.log(err);
+  });
+};
+
 exports.psh_get_id = (req, res) => {
   PSH.findOne({
     _id: req.params._id,
