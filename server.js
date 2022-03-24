@@ -1,17 +1,19 @@
-var express = require("express");
-var cors = require("cors");
-var bodyParser = require("body-parser");
-var app = express();
-var mongoose = require("mongoose");
-var port = process.env.PORT || 5000;
+const dotenv = require('dotenv').config();
+const express = require("express");
+const cors = require("cors");
+const bodyParser = require("body-parser");
+const listEndpoints = require("express-list-endpoints");
+const app = express();
+const mongoose = require("mongoose");
+const port = process.env.PORT || 5000;
 
 app.use(bodyParser.json());
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /*app.use(function(req, res, next) {
-  var allowedOrigins = ['https://prj-redsquare.herokuapp.com/','https://redsquare-prj.netlify.com','http://127.0.0.1:8080','http://localhost:8080'];
-  var origin = req.headers.origin;
+  const allowedOrigins = ['https://prj-redsquare.herokuapp.com/','https://redsquare-prj.netlify.com','http://127.0.0.1:8080','http://localhost:8080'];
+  const origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
       res.setHeader('Access-Control-Allow-Origin', origin);
   }
@@ -22,18 +24,42 @@ app.use(bodyParser.urlencoded({ extended: false }));
   return next();
 });*/
 
-const mongoURI =
-  "mongodb://lezardscreation:" +
-  process.env.MONGO_ATLAS_PW +
-  "@atelierd-shard-00-00.jeyms.mongodb.net:27017,atelierd-shard-00-01.jeyms.mongodb.net:27017,atelierd-shard-00-02.jeyms.mongodb.net:27017/AtelierDAPI?ssl=true&replicaSet=atlas-6esc9t-shard-0&authSource=admin&retryWrites=true&w=majority";
+const mongoURI = `mongodb+srv://lezardscreation:${process.env.MONGO_ATLAS_PW}@atelierd.jeyms.mongodb.net/AtelierDAPI?retryWrites=true&w=majority`;
 
-mongoose.connect(mongoURI, { useMongoClient: true })
-var Clim = require("./routes/Clim");
-var PSH = require("./routes/PSH");
+mongoose
+.connect(mongoURI)
+.then(() => console.log("MongoDB Connected"))
+.catch((err) => console.log('Erreur : ', err));
+const Clim = require("./routes/Clim");
+const PSH = require("./routes/PSH");
+const { route } = require('./routes/PSH');
 
 app.use("/clim", Clim);
 app.use("/psh", PSH);
 
 const server = app.listen(port, function () {
   console.log("Server is running on port: " + port);
+});
+
+
+
+
+app.set('views', './views')
+app.set('view engine', 'pug');
+app.get('/', function (req, res) {
+  const endpoints = listEndpoints(app)
+  let routes = {}
+
+  var fullUrl = req.protocol + '://' + req.get('host');
+  endpoints.map((d) => {
+    routes[d.path] = fullUrl + d.path
+  })
+
+  console.log(routes)
+
+  res.render('index', { 
+    title: 'AtelierD - API', 
+    message: 'Liste des routes',
+    routes: routes
+  });
 });
