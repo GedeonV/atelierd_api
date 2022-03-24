@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
   var allowedOrigins = ['https://prj-redsquare.herokuapp.com/','https://redsquare-prj.netlify.com','http://127.0.0.1:8080','http://localhost:8080'];
   var origin = req.headers.origin;
   if(allowedOrigins.indexOf(origin) > -1){
-       res.setHeader('Access-Control-Allow-Origin', origin);
+      res.setHeader('Access-Control-Allow-Origin', origin);
   }
   res.header('Access-Control-Allow-Origin', '*');
   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
@@ -25,13 +25,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 const mongoURI =
   "mongodb://lezardscreation:" +
   process.env.MONGO_ATLAS_PW +
-  "@atelierd.jeyms.mongodb.net/AtelierDAPI?retryWrites=true&w=majority";
+  "@atelierd-shard-00-00.jeyms.mongodb.net:27017,atelierd-shard-00-01.jeyms.mongodb.net:27017,atelierd-shard-00-02.jeyms.mongodb.net:27017/AtelierDAPI?ssl=true&replicaSet=atlas-6esc9t-shard-0&authSource=admin&retryWrites=true&w=majority";
 
-mongoose
-  .connect(mongoURI, { useNewUrlParser: true })
-  .then(() => console.log("MongoDB Connected"))
-  .catch((err) => console.log(err));
-
+mongoose.connect(mongoURI, { useMongoClient: true })
 var Clim = require("./routes/Clim");
 var PSH = require("./routes/PSH");
 
