@@ -9,16 +9,15 @@ exports.psh_get_all = (req, res) => {
       if (psh) {
         res.status(200).json({
           count: psh.length,
-          songs: psh.map((doc) => {
+          refs: psh.map((doc) => {
             return {
-              // _id: doc._id,
-              // title: doc.title,
-              // artist: doc.artist,
-              // album: doc.album,
-              // date: doc.date,
-              // style: doc.style,
-              // time: doc.time,
-              // path: doc.path,
+              _id: doc._id,
+              marque: doc.marque,
+              modele: doc.modele,
+              moteur: doc.moteur,
+              date1: doc.date1,
+              date2: doc.date2,
+              ref: doc.ref,
               // request: {
               //   type: "GET",
               //   url: "https://sfm-project.herokuapp.com/songs/song/" + doc._id,
