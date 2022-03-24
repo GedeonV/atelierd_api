@@ -3,7 +3,17 @@ const psh = express.Router();
 const cors = require("cors");
 const PSHController = require("../controllers/PSH");
 const multer = require('multer');
-const upload = multer({ dest: 'tmp/csv/' });
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, 'uploads/');
+    },
+    filename: (req, file, cb) => {
+        cb(null, file.originalname);
+    }
+});
+
+const upload = multer({ storage });
 
 psh.use(cors());
 
