@@ -2,6 +2,7 @@ const cors = require("cors");
 const PSH = require("../models/PSH");
 const fs = require("fs");
 const PSH_routes = require("../routes/PSH");
+const csv = require('csv-parser');
 
 exports.psh_get_all = (req, res) => {
   PSH.find({})
@@ -72,6 +73,31 @@ exports.psh_create = (req, res) => {
     console.log(err);
   });
 };
+
+exports.psh_upload = (req, res) => {
+  try {
+    if(!req.files){
+      res.send({
+        status: false,
+        message: 'R'
+      })
+    } else {
+      let csv = req.files.csv;
+      csv.mv('./uploads/' + csv.name);
+      res.send({
+        status: true,
+        message: 'CSV Reçu',
+        data: {
+          nom: csv.name,
+          mimetype: csv.mimetype,
+          size: csv.size
+        }
+      })
+    }
+  } catch (err) {
+    res.status(500).send(err);
+  }
+}
 
 exports.psh_get_id = (req, res) => {
   PSH.findOne({

@@ -1,7 +1,6 @@
 const express = require("express");
 const psh = express.Router();
 const cors = require("cors");
-process.env.SECRET_KEY = "sfmprj88";
 const PSHController = require("../controllers/PSH");
 
 psh.use(cors());
