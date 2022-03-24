@@ -2,7 +2,7 @@ const cors = require("cors");
 const PSH = require("../models/PSH");
 const fs = require("fs");
 const PSH_routes = require("../routes/PSH");
-const csv = require('csv-parser');
+const csv = require('fast-csv');
 
 exports.psh_get_all = (req, res) => {
   PSH.find({})
@@ -75,39 +75,17 @@ exports.psh_create = (req, res) => {
 };
 
 exports.psh_upload = (req, res) => {
-  try {
-    if(!req.files){
-      res.send({
-        status: false,
-        message: 'R'
-      })
-    } else {
-      let csv = req.files.csv;
-      csv.mv('./uploads/' + csv.name);
-      
-      fs.createReadStream('./uploads/' + csv.name)
-      .pipe(csv())
-      .on('data', (row) => {
-        console.log(row);
-      })
-      .on('end', () => {
-        console.log('CSV file successfully processed');
-      });
-
-
-      res.send({
-        status: true,
-        message: 'CSV Reçu',
-        data: {
-          nom: csv.name,
-          mimetype: csv.mimetype,
-          size: csv.size
-        }
-      })
-    }
-  } catch (err) {
-    res.status(500).send(err);
-  }
+  const fileRows = [];
+  // open uploaded file
+  csv.fromPath(req.file.path)
+    .on("data", function (data) {
+      fileRows.push(data); // push each row
+    })
+    .on("end", function () {
+      console.log(fileRows)
+      fs.unlinkSync(req.file.path);   // remove temp file
+      //process "fileRows" and respond
+    })
 }
 
 exports.psh_get_id = (req, res) => {

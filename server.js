@@ -1,6 +1,6 @@
 const dotenv = require('dotenv').config();
 const express = require("express");
-const fileUpload = require('express-fileupload');
+//const fileUpload = require('express-fileupload');
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const listEndpoints = require("express-list-endpoints");
@@ -8,9 +8,9 @@ const app = express();
 const mongoose = require("mongoose");
 const port = process.env.PORT || 5000;
 
-app.use(fileUpload({
-  createParentPath: true
-}));
+// app.use(fileUpload({
+//   createParentPath: true
+// }));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -46,8 +46,6 @@ const server = app.listen(port, function () {
 });
 
 
-
-
 app.set('views', './views')
 app.set('view engine', 'pug');
 app.get('/', function (req, res) {
@@ -58,8 +56,6 @@ app.get('/', function (req, res) {
   endpoints.map((d) => {
     routes[d.path] = fullUrl + d.path
   })
-
-  console.log(routes)
 
   res.render('index', { 
     title: 'AtelierD - API', 
