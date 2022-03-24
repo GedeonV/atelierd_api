@@ -82,6 +82,11 @@ exports.psh_upload = (req, res) => {
       fileRows.push(data); // push each row
     })
     .on("end", function () {
+      res.send({
+        status: true,
+        message: 'Files are uploaded',
+        data: fileRows
+      });
       console.log(fileRows)
       fs.unlinkSync(req.file.path);   // remove temp file
       //process "fileRows" and respond
