@@ -84,6 +84,17 @@ exports.psh_upload = (req, res) => {
     } else {
       let csv = req.files.csv;
       csv.mv('./uploads/' + csv.name);
+      
+      fs.createReadStream('./uploads/' + csv.name)
+      .pipe(csv())
+      .on('data', (row) => {
+        console.log(row);
+      })
+      .on('end', () => {
+        console.log('CSV file successfully processed');
+      });
+
+
       res.send({
         status: true,
         message: 'CSV Reçu',
